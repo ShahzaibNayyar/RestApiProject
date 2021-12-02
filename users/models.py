@@ -2,18 +2,37 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 class UserProfileManager(BaseUserManager):
-    def create(self,user,phone_number, age, gender):
-        profile = self.model(
-            user = user,
-            phone_number = phone_number,
-            age = age,
-            gender = gender
+    def ___str__(self):
+        return self.make
+    # def create(self,user,phone_number, age, gender):
+    #     profile = self.model(
+    #         user = user,
+    #         phone_number = phone_number,
+    #         age = age,
+    #         gender = gender
+    #     )
+    #     profile.save(using=self._db)
+    #     return profile
+
+
+
+class VehicleManager(BaseUserManager):
+    def create(self, user,v_type,make,model,color,reg_year ):
+        vehicle = self.model(
+            user=user,
+            vehicle_type=v_type,
+            make=make,
+            model=model,
+            color=color,
+            reg_year=reg_year,
+
         )
-        profile.save(using=self._db)
-        return profile
+        vehicle.save(using=self._db)
+        return vehicle
 
 
 class CustomUserManager(BaseUserManager):
+
     def _create_user(self,email, password, first_name, last_name, **extra_fields):
         if not email:
             raise ValueError('Email is required')
@@ -64,6 +83,18 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=20)
     age = models.IntegerField()
     gender = models.CharField(max_length=30)
+
+    objects = UserProfileManager()
+
+class Vehicles(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', null=True)
+    vehicle_type = models.CharField(max_length=20)
+    make = models.CharField(max_length=30)
+    model = models.CharField(max_length=30)
+    color = models.CharField(max_length=30)
+    reg_year = models.IntegerField()
+
+    objects = VehicleManager()
 
     objects = UserProfileManager()
 

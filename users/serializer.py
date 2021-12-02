@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from RestApiProject import settings
-from .models import User, UserProfile
+from .models import User, UserProfile,Vehicles
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=128, write_only=True)
@@ -90,3 +90,39 @@ class UserProfileSerializer(serializers.ModelSerializer):
         else:
             print("ERROR" , user_serializer.errors)
         return super().update(instance, validated_data)
+
+class VehicleSerializer(serializers.ModelSerializer):
+    # user = UserSerializer(read_only=True)
+    # user = UserSerializer(read_only=True,many=False)
+    # user = UserSerializer(read_only=False, many=True)
+
+    # user = UserSerializer.PrimaryKeyRelatedField(
+    #     queryset=User.objects.all(),  # Or User.objects.filter(active=True)
+    #     required=False,
+    #     allow_null=True,
+    #     default=None
+    # )
+
+    user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(),many = False)
+
+
+    # user = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Vehicles
+        fields = ['user', 'vehicle_type', 'make', 'model', 'color','reg_year']
+        # read_only_fields = ('user')
+
+
+        #
+        # def create(self, validated_data):
+        #     user_data = self.request.user
+        #     print("user_data", user_data)
+        #     vehicle = Vehicles.objects.create(user=user_data['email'],
+        #                                          type=validated_data['vehicle_type'],
+        #                                          make=validated_data['make'],
+        #                                          model=validated_data['model'],
+        #                                          color=validated_data['color'],
+        #                                          reg_year=validated_data['reg_year'],
+        #                                          )
+        #     return vehicle

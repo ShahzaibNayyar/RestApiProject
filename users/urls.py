@@ -3,5 +3,6 @@ from django.urls import path, include
 from users import views
 urlpatterns = [
     path('users/', views.RegisterUser.as_view()),
+    path('vehicles/', views.VehiclesView.as_view()),
     # path('user/:id', views.SpeceficUserView.as_view())
 ]
