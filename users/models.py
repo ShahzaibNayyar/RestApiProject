@@ -1,5 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+
+class UserProfileManager(BaseUserManager):
+    def create(self,user,phone_number, age, gender):
+        profile = self.model(
+            user = user,
+            phone_number = phone_number,
+            age = age,
+            gender = gender
+        )
+        profile.save(using=self._db)
+        return profile
+
+
 class CustomUserManager(BaseUserManager):
     def _create_user(self,email, password, first_name, last_name, **extra_fields):
         if not email:
@@ -51,5 +64,7 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=20)
     age = models.IntegerField()
     gender = models.CharField(max_length=30)
+
+    objects = UserProfileManager()
 
 
